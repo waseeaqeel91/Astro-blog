@@ -1,0 +1,38 @@
+---
+import Layout from "../../layout/layout.astro";
+import MainLayout from "../../layout/MainLayout.astro";
+import Articles from "../../components/Articles.astro";
+import Pagination from "../../components/Pagination.astro";
+
+import type { CollectionEntry } from "astro:content";
+import { getCollection } from "astro:content";
+
+import { HOMEPAGE_ARTICLE_LIMIT } from "../../constant.ts";
+
+const currentPage: number | null =
+  Number(Astro.url.searchParams.get("page")) || 1;
+
+const allBlogArticles: CollectionEntry<"blog">[] = await getCollection("blog");
+
+const articles = (await getCollection("blog")).sort(
+  (a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const totalPages: number = Math.ceil(
+  allBlogArticles.length / HOMEPAGE_ARTICLE_LIMIT,
+);
+
+// Slicing articles for current page
+const articlesForPage = articles.slice(
+  (currentPage - 1) * HOMEPAGE_ARTICLE_LIMIT,
+  currentPage * HOMEPAGE_ARTICLE_LIMIT,
+);
+---
+
+<Layout>
+  <MainLayout>
+    <Articles articles={articlesForPage}/>
+    <Pagination currentPage={currentPage} totalPages={totalPages} />
+  </MainLayout>
+</Layout>

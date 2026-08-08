@@ -1,0 +1,58 @@
+---
+import ArticleCard from "../../../components/ArticleCard.astro";
+
+import { capitalize } from "../../../utils";
+
+import { getCollection } from "astro:content";
+const articles = (await getCollection("blog")).sort(
+  (a: CollectionEntry<"blog">, b: CollectionEntry<"blog">) =>
+    b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const { tag } = Astro.params;
+
+import type { CollectionEntry } from "astro:content";
+import Layout from "../../../layout/layout.astro";
+import MainLayout from "../../../layout/MainLayout.astro";
+
+if (tag === undefined) {
+  throw new Error("tag is not defined");
+}
+
+const tagArticles = articles.filter((article) =>
+  article.data.tags.includes(tag),
+);
+
+---
+
+<Layout>
+  <MainLayout>
+    <section class="max-w-screen mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div class="flex gap-3  ">
+        <a
+          href="/articles"
+          class="inline-block bg-gray-100 p-2 mb-6 hover:bg-indigo-500  rounded-xl ase-in hover:text-white"
+          >Back To Articles
+        </a>
+        <a
+          href="/"
+          class="inline-block bg-gray-100 p-2 mb-6 hover:bg-indigo-500 rounded-xl  hover:text-white"
+          >Back To Home
+        </a>
+      </div>
+      <div class="mb-12">
+        <h1 class="text-4xl font-extrabold text-gray-900 mb-4">
+          #{capitalize(tag)}
+        </h1>
+        <p class="text-gray-600">
+          Explore our complete collection of technical guides, hardware specs,
+          and software tutorials.
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-3 gap-8">
+        {tagArticles.map((article) => <ArticleCard article={article} />)}
+      </div>
+    </section>
+  </MainLayout>
+</Layout>

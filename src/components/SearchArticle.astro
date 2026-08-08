@@ -1,0 +1,34 @@
+<div class="flex items-center justify-between gap-6 px-0">
+  <form
+    action="/articles/search"
+    method="GET"
+    class="relative flex grow items-center justify-between gap-4"
+  >
+    <input
+      type="text"
+      name="query"
+      placeholder="Search articles..."
+      class="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent transition-all shadow-sm"
+      required
+    />
+    <div class="flex gap-2 items-center justify-between text-white  px-4 py-3 w-30 bg-indigo-600 font-normal rounded-xl  cursor-pointer">
+      <button
+        type="submit"
+        class=""
+        >Search</button
+      >
+      <svg
+        class="w-5 h-5 text-white"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+      </svg>
+    </div>
+  </form>
+</div>

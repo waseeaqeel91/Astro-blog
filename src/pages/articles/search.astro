@@ -1,0 +1,55 @@
+---
+import Layout from "../../layout/layout.astro";
+import MainLayout from "../../layout/MainLayout.astro";
+import Articles from "../../components/Articles.astro";
+import SearchArticles from "../../components/SearchArticle.astro";
+import ArticleCard from "../../components/ArticleCard.astro";
+
+import Pagination from "../../components/Pagination.astro";
+
+import { getCollection } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+
+const allBlogArticles: CollectionEntry<"blog">[] = await getCollection("blog");
+
+const query: string | null = Astro.url.searchParams.get("query");
+
+const searchResult = allBlogArticles.filter((article) => {
+  if (!query) return false;
+
+  const queryLower = query.toLowerCase();
+
+  // 1. Search in Title
+  const titleMatch = article.data.title?.toLowerCase().includes(queryLower);
+
+  // 2. Search in Tags Array
+  const tagMatch = article.data.tags?.some((tag: string) =>
+    tag.toLowerCase().includes(queryLower),
+  );
+
+  // 3. Search in Body Content
+  const bodyMatch = article.body
+    ? article.body.toLowerCase().includes(queryLower)
+    : false;
+
+  return titleMatch || tagMatch || bodyMatch;
+});
+---
+
+<Layout title="Search Result">
+  <MainLayout>
+    <a
+      href="/articles"
+      class="inline-block bg-gray-100 p-2 mb-6 hover:bg-indigo-500 hover:text-white"
+      >Back To Articles</a
+    >
+    <SearchArticles />
+    <br />
+
+    <h1 class="text-2xl pb-3 m-6">Search Results #{query}</h1>
+
+    <div class="grid md:grid-cols-3 gap-8 m-10 mt-0">
+      {searchResult.map((article) => <ArticleCard article={article} />)}
+    </div>
+  </MainLayout>
+</Layout>

@@ -1,0 +1,58 @@
+---
+// Pagination.astro
+interface Props {
+  currentPage: number;
+  totalPages: number;
+}
+
+const { currentPage, totalPages } = Astro.props;
+
+const disablePrevious = currentPage <= 1;
+const disableNext = currentPage >= totalPages;
+---
+
+<div
+  class="flex items-center justify-between border-t border-gray-200 px-4 py-4 sm:px-6 mt-10"
+>
+  <!-- Previous Button -->
+  <a
+    href={disablePrevious ? "#" : `/articles?page=${currentPage - 1}`}
+    class={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${
+      disablePrevious
+        ? "opacity-50 pointer-events-none bg-gray-100 text-gray-400"
+        : "bg-white text-gray-700 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+    }`}
+  >
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M15 19l-7-7 7-7"></path>
+    </svg>
+    Previous
+  </a>
+
+  <div class="w-full bg-amber-200/0 text-xs font-bold text-zinc-500 flex items-center justify-center">
+    <span>{currentPage} of {totalPages}</span>
+  </div>
+
+  <!-- Next Button -->
+  <a
+    href={disableNext ? "#" : `/articles?page=${currentPage + 1}`}
+    class={`inline-flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors ${
+      disableNext
+        ? "opacity-50 pointer-events-none bg-indigo-300 text-white"
+        : "bg-indigo-600 text-white shadow-sm hover:bg-indigo-700"
+    }`}
+  >
+    Next
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M9 5l7 7-7 7"></path>
+    </svg>
+  </a>
+</div>

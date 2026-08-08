@@ -1,0 +1,58 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import { formatDate } from "../utils";
+import Tags from "./Tags.astro";
+import type { string } from "astro:schema";
+
+const { article } = Astro.props;
+
+interface Props {
+  article: CollectionEntry<"blog">;
+}
+---
+
+<article
+  class="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group"
+>
+  <div class="w-full h-48 overflow-hidden bg-gray-100">
+    <a
+      href={`/articles/${article.id}`}
+      class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1"
+    >
+      <img
+        src={article.data.image}
+        alt={article.data.title}
+        class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+      />
+    </a>
+  </div>
+  <div class="p-6 grow flex flex-col">
+    <div class="flex justify-between items-center mb-2">
+      <Tags tags={article.data.tags} />
+
+      <span class="text-xs text-gray-400">
+        {formatDate(article.data.pubDate)}
+      </span>
+    </div>
+    <span
+      class="text-xl font-bold text-gray-900 group-hover:text-indigo-600 transition-colors"
+    >
+      {article.data.title}
+    </span>
+    <p class="text-sm text-gray-600 mb-1">By {article.data.author}</p>
+    {
+      /* <div class="h-5 w-5 bg-indigo-500 my-1">
+              {article.data.tags.map((tag,index)=>(
+
+              ))}
+            </div> */
+    }
+    <a
+      href={`/articles/${article.id}`}
+      class="text-sm font-semibold text-indigo-600 hover:text-indigo-700 inline-flex items-center gap-1"
+    >
+      Read Article &rarr;
+    </a>
+  </div>
+</article>

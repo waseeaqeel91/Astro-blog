@@ -2,6 +2,8 @@
 import { getCollection } from "astro:content";
 import type { CollectionEntry } from "astro:content";
 import { capitalize } from "../utils";
+import Analytics from "@vercel/analytics/astro";
+import { ClientRouter } from "astro:transitions";
 
 const allBlogArticles: CollectionEntry<"blog">[] = await getCollection("blog");
 
@@ -12,7 +14,11 @@ const tags: string[] = allBlogArticles.flatMap(
 const uniqueTags: string[] = [...new Set(tags)];
 ---
 
+<Analytics />
+<ClientRouter />
+
 <header
+  transition:persist
   class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200"
 >
   <div
@@ -23,7 +29,6 @@ const uniqueTags: string[] = [...new Set(tags)];
       <div
         class="w-10 h-10 bg-indigo-50 border border-indigo-100 rounded-xl flex items-center justify-center group-hover:bg-indigo-100 transition-colors"
       >
-        <!-- Fixed image path: removed /public -->
         <img
           src="/images/image1.png"
           alt="TechPeople Logo"
@@ -37,16 +42,33 @@ const uniqueTags: string[] = [...new Set(tags)];
 
     <!-- Navigation Links -->
     <nav
+      id="main-nav"
       class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600"
     >
-      <a href="/" class="text-indigo-600 font-semibold">Home</a>
-      <a href="/articles" class="hover:text-indigo-600 transition-colors"
-        >Articles</a
+      <a
+        href="/"
+        class={Astro.url.pathname === "/"
+          ? "text-indigo-600 font-semibold nav-link"
+          : "hover:text-indigo-600 transition-colors nav-link"}>Home</a
       >
-      <a href="/features" class="hover:text-indigo-600 transition-colors"
-        >Features</a
+      <a
+        href="/articles"
+        class={Astro.url.pathname.startsWith("/articles")
+          ? "text-indigo-600 font-semibold nav-link"
+          : "hover:text-indigo-600 transition-colors nav-link"}>Articles</a
       >
-      <a href="/about" class="hover:text-indigo-600 transition-colors">About</a>
+      <a
+        href="/features"
+        class={Astro.url.pathname.startsWith("/features")
+          ? "text-indigo-600 font-semibold nav-link"
+          : "hover:text-indigo-600 transition-colors nav-link"}>Features</a
+      >
+      <a
+        href="/about"
+        class={Astro.url.pathname.startsWith("/about")
+          ? "text-indigo-600 font-semibold nav-link"
+          : "hover:text-indigo-600 transition-colors nav-link"}>About</a
+      >
     </nav>
 
     <!-- Action Buttons -->
@@ -67,18 +89,16 @@ const uniqueTags: string[] = [...new Set(tags)];
   </div>
 </header>
 
-<!-- MAIN CONTENT WRAPPER WITH SLOT -->
-<main class="max-h-full">
+<main class="max-h-full" transition:animate="fade">
   <slot />
-  <!-- THIS IS WHERE <HeroSection /> WILL NOW RENDER! -->
 </main>
 
 <footer class="bg-gray-900 text-gray-400 border-t border-gray-800 py-12">
   <div
-    class="max-w-7xl mx-auto flex justify-between  px-4 sm:px-6 lg:px-8  mb-12 "
+    class="max-w-7xl mx-auto flex justify-between px-4 sm:px-6 lg:px-8 mb-12"
   >
     <div class="flex flex-col flex-nowrap">
-      <h4 class="text-white font-semibold f  gap-8 text-sm mb-4">Resources</h4>
+      <h4 class="text-white font-semibold f gap-8 text-sm mb-4">Resources</h4>
       <ul
         class="space-y-2.5 text-sm bg-amber-200/0 flex flex-wrap justify-between max-h-[300px] max-w-[300px] gap-3"
       >
@@ -110,7 +130,9 @@ const uniqueTags: string[] = [...new Set(tags)];
             >
           </li>
           <li>
-            <a href="#" class="hover:text-white transition-colors">About Us</a>
+            <a href="/about" class="hover:text-white transition-colors"
+              >About Us</a
+            >
           </li>
         </ul>
       </div>
@@ -152,3 +174,34 @@ const uniqueTags: string[] = [...new Set(tags)];
     <p>Built with Astro & Tailwind CSS.</p>
   </div>
 </footer>
+
+<script>
+  // Dynamic active link highlighting for transition:persist navigation
+  document.addEventListener("astro:page-load", () => {
+    const pathname = window.location.pathname;
+    const navLinks = document.querySelectorAll("#main-nav a.nav-link");
+
+    navLinks.forEach((link) => {
+      const href = link.getAttribute("href");
+      const isActive =
+        href === "/" ? pathname === "/" : href && pathname.startsWith(href);
+
+      if (isActive) {
+        link.className = "text-indigo-600 font-semibold nav-link";
+      } else {
+        link.className = "hover:text-indigo-600 transition-colors nav-link";
+      }
+    });
+  });
+</script>
+
+<style is:global>
+  /* Slow down the view transition swap so content has time to render */
+  ::view-transition-old(root) {
+    animation-duration: 400ms;
+  }
+  ::view-transition-new(root) {
+    animation-duration: 500ms;
+    animation-delay: 200ms;
+  }
+</style>

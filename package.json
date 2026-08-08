@@ -14,7 +14,11 @@
   "dependencies": {
     "@astrojs/vercel": "^11.0.5",
     "@tailwindcss/vite": "^4.3.3",
+    "@vercel/analytics": "^2.0.1",
     "astro": "^7.1.6",
     "tailwindcss": "^4.3.3"
+  },
+  "overrides": {
+    "path-to-regexp": "^6.3.0"
   }
 }

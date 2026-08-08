@@ -2,6 +2,8 @@
 import ArticleCard from "../../../components/ArticleCard.astro";
 
 import { capitalize } from "../../../utils";
+import BackToHome from "../../../components/BackToHome.astro";
+import BackToAllArticles from "../../../components/BackToAllArticles.astro";
 
 import { getCollection } from "astro:content";
 const articles = (await getCollection("blog")).sort(
@@ -22,24 +24,16 @@ if (tag === undefined) {
 const tagArticles = articles.filter((article) =>
   article.data.tags.includes(tag),
 );
-
 ---
 
 <Layout>
   <MainLayout>
     <section class="max-w-screen mx-auto px-4 sm:px-6 lg:px-8 py-16">
-      <div class="flex gap-3  ">
-        <a
-          href="/articles"
-          class="inline-block bg-gray-100 p-2 mb-6 hover:bg-indigo-500  rounded-xl ase-in hover:text-white"
-          >Back To Articles
-        </a>
-        <a
-          href="/"
-          class="inline-block bg-gray-100 p-2 mb-6 hover:bg-indigo-500 rounded-xl  hover:text-white"
-          >Back To Home
-        </a>
+      <div class="flex gap-4">
+        <BackToHome />
+        <BackToAllArticles />
       </div>
+
       <div class="mb-12">
         <h1 class="text-4xl font-extrabold text-gray-900 mb-4">
           #{capitalize(tag)}

@@ -3,6 +3,8 @@ import ArticleCard from "./ArticleCard.astro";
 import SearchArticle from "./SearchArticle.astro";
 import type { CollectionEntry } from "astro:content";
 
+import BackToHome from "../components/BackToHome.astro";
+
 // 1. Define the Props interface
 interface Props {
   articles: CollectionEntry<"blog">[];
@@ -13,12 +15,7 @@ const { articles } = Astro.props;
 ---
 
 <section class="max-w-screen mx-auto px-4 sm:px-6 lg:px-8 py-16">
-  <a
-    href="/articles"
-    class="inline-block bg-gray-100 p-2 mb-6 hover:bg-indigo-500 hover:text-white"
-  >
-    Back To Articles
-  </a>
+  <BackToHome />
 
   <SearchArticle />
   <br />

@@ -5,13 +5,13 @@ import MainLayout from "../layout/MainLayout.astro";
 import Layout from "../layout/layout.astro";
 
 import { Image } from "astro:assets";
-import error from '../../src/images/error-404.png'
+import error from 'pulic/images/error-404.png'
 ---
 
 <Layout title="404 - page not found">
   <MainLayout title="404 - page not found">
     <div class="max-h-screen flex items-center justify-center gap-7">
-      <Image src={error} alt="404" height={250} width={250} class="my-21" />
+      <Image src='/images/error-404.png' alt="404" height={250} width={250} class="my-21" />
     </div>
   </MainLayout>
 </Layout>

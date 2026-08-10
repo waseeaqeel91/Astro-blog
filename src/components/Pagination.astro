@@ -1,4 +1,6 @@
 ---
+import PiLogoAnimation from './PiLogoAnimation.astro';
+
 // Pagination.astro
 interface Props {
   currentPage: number;
@@ -12,7 +14,7 @@ const disableNext = currentPage >= totalPages;
 ---
 
 <div
-  class="flex items-center justify-between border-t border-gray-200 px-4 py-4 sm:px-6 mt-10"
+  class="flex items-center justify-between border-t border-zinc-800 px-4 py-4 sm:px-6 mt-10"
 >
   <!-- Previous Button -->
   <a
@@ -34,7 +36,12 @@ const disableNext = currentPage >= totalPages;
   </a>
 
   <div class="w-full bg-amber-200/0 text-xs font-bold text-zinc-500 flex items-center justify-center">
-    <span>{currentPage} of {totalPages}</span>
+    <span class="flex items-center">{currentPage} 
+      <PiLogoAnimation 
+        width="w-2 sm:w-5" 
+        height="h-2 sm:h-5" 
+        bgClass="bg-transparent border-none shadow-none" 
+      />{totalPages}</span>
   </div>
 
   <!-- Next Button -->

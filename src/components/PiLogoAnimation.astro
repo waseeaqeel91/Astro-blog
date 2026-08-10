@@ -1,0 +1,102 @@
+---
+interface Props {
+  width?: string;
+  height?: string;
+  bgClass?: string;
+  class?: string;
+}
+
+const {
+  width = "w-12",
+  height = "h-12",
+  bgClass = "",
+  class: className = ""
+} = Astro.props;
+---
+
+<!-- Outer Container: Has no default background/border unless passed via bgClass -->
+<div
+  data-pi-logo-container
+  class={`relative ${width} ${height} ${bgClass} rounded-xl transition-all duration-300 overflow-visible cursor-pointer shrink-0 ${className}`}
+  style="container-type: inline-size;"
+>
+  <!-- Anchor Wrapper -->
+  <a
+    href="/"
+    class="group flex items-center justify-center w-full h-full relative"
+    aria-label="Home"
+  >
+    <!-- Pi Symbol with Inter Font -->
+    <span
+      data-pi-symbol
+      class="relative z-10 font-['Inter'] font-black tracking-tight text-gray-900 dark:text-white/90 select-none transition-all duration-300 ease-out transform group-hover:-translate-y-[15%] group-hover:scale-110 group-hover:rotate-[-6deg]"
+      style="font-size: 52cqw; line-height: 1;"
+    >
+      π
+    </span>
+
+    <!-- Dot Symbol -->
+    <span
+      data-dot-symbol
+      class="font-black text-indigo-600 dark:text-indigo-400 select-none transition-all duration-500 ease-out transform translate-x-0 translate-y-0 leading-none group-hover:scale-125 group-hover:-translate-y-[10%] group-hover:translate-x-[10%] group-hover:text-indigo-500 dark:group-hover:text-indigo-300 group-hover:drop-shadow-[0_10px_15px_rgba(99,102,241,0.4)]"
+      style="font-size: 140cqw; line-height: 0;"
+    >
+      .
+    </span>
+  </a>
+</div>
+
+<style>
+  /* Import Inter Google Font */
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@800;900&display=swap');
+
+  /* Keyframe pulsation physics on hover */
+  .group:hover [data-dot-symbol] {
+    animation: pulseDot 2s ease-in-out infinite alternate;
+  }
+
+  @keyframes pulseDot {
+    0% {
+      filter: drop-shadow(0 4px 10px rgba(99, 102, 241, 0.3));
+    }
+    100% {
+      filter: drop-shadow(0 12px 24px rgba(99, 102, 241, 0.6));
+    }
+  }
+</style>
+
+<script>
+  const initPiAnimation = () => {
+    const logoContainers = document.querySelectorAll("[data-pi-logo-container]");
+
+    logoContainers.forEach((container) => {
+      const piSymbol = container.querySelector("[data-pi-symbol]") as HTMLElement | null;
+      const dotSymbol = container.querySelector("[data-dot-symbol]") as HTMLElement | null;
+
+      if (!container || !piSymbol || !dotSymbol) return;
+
+      const handleMouseMove = (e: Event) => {
+        const mouseEvent = e as MouseEvent;
+        const rect = container.getBoundingClientRect();
+        const x = mouseEvent.clientX - rect.left - rect.width / 2;
+        const y = mouseEvent.clientY - rect.top - rect.height / 2;
+
+        const scaleFactor = rect.width / 48; // Normalizes movement offset based on container width
+        
+        piSymbol.style.transform = `translate(${x * 0.35}px, ${y * 0.35 - (12 * scaleFactor)}px) scale(1.15) rotate(${x * 0.8}deg)`;
+        dotSymbol.style.transform = `translate(${x * -0.2}px, ${y * -0.2 - (6 * scaleFactor)}px) scale(1.3) rotate(${y * -0.5}deg)`;
+      };
+
+      const handleMouseLeave = () => {
+        piSymbol.style.transform = "";
+        dotSymbol.style.transform = "";
+      };
+
+      container.addEventListener("mousemove", handleMouseMove);
+      container.addEventListener("mouseleave", handleMouseLeave);
+    });
+  };
+
+  initPiAnimation();
+  document.addEventListener("astro:page-load", initPiAnimation);
+</script> 

@@ -2,10 +2,20 @@
 import Layout from "../layout/layout.astro";
 import MainLayout from "../layout/MainLayout.astro";
 import Feature from "../components/Feature.astro";
+import PiLogoAnimation from "../components/PiLogoAnimation.astro";
 ---
 
-<Layout title="Feature - Tech Team">
+<Layout title="Feature - Tech Pie">
   <MainLayout>
     <Feature />
+    
+    <!-- Hero Section Pi Logo (Large size with transparent background) -->
+    <div class="flex items-center justify-center my-12">
+      <PiLogoAnimation 
+        width="w-32 sm:w-48" 
+        height="h-32 sm:h-48" 
+        bgClass="bg-transparent border-none shadow-none" 
+      />
+    </div>
   </MainLayout>
 </Layout>
